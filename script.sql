@@ -22,3 +22,27 @@ BEGIN
     CLOSE cur_cursor;
 END;
 $$
+
+
+ --1.2 Escreva um cursor que exibe todos os nomes dos youtubers em ordem reversa:
+DO $$
+DECLARE
+    cur_cursor REFCURSOR;
+    tupla RECORD;
+BEGIN
+    OPEN cur_cursor SCROLL FOR
+        SELECT youtuber
+        FROM tb_top_youtubers
+        ORDER BY youtuber;
+
+    FETCH LAST FROM cur_cursor INTO tupla;
+
+    WHILE FOUND
+    LOOP
+        RAISE NOTICE 'Youtuber: %', tupla.youtuber;
+        FETCH PRIOR FROM cur_cursor INTO tupla;
+    END LOOP;
+
+    CLOSE cur_cursor;
+END;
+$$
